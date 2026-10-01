@@ -1,0 +1,27 @@
+/* KMUTNB Shop Custom Styles */
+@layer utilities {
+    .bg-kmutnb-gradient {
+        background: linear-gradient(135deg, #E04006 0%, #C2410C 100%);
+    }
+}
+
+/* Subtle fade in for HTMX swapped elements */
+.htmx-swapping {
+    opacity: 0;
+    transition: opacity 150ms ease-out;
+}
+
+.htmx-settling {
+    opacity: 1;
+    transition: opacity 200ms ease-in;
+}
+
+/* Pulse animation for active reservations */
+@keyframes softPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+.animate-soft-pulse {
+    animation: softPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}

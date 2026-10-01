@@ -1,0 +1,231 @@
+{% extends 'base_manage.html' %}
+
+{% block page_title %}Dashboard ภาพรวมระบบบริหารคลังและการจอง{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Top Welcome Banner -->
+    <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-md relative overflow-hidden">
+        <div class="absolute right-0 top-0 w-80 h-80 bg-orange-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+                <div class="flex items-center gap-2 mb-1.5">
+                    {% if is_admin %}
+                        <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                            👑 ระดับสิทธิ์: Admin (ผู้ดูแลระบบกลาง)
+                        </span>
+                    {% else %}
+                        <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                            🏢 ระดับสิทธิ์: Staff ประจำสาขา
+                        </span>
+                    {% endif %}
+                </div>
+                <h2 class="text-xl sm:text-2xl font-black">
+                    สวัสดี, {{ user.get_full_name|default:user.username }}
+                </h2>
+                <p class="text-xs sm:text-sm text-slate-300 mt-1">
+                    {% if is_admin %}
+                        คุณกำลังดูข้อมูลภาพรวมของทุกจุดจำหน่ายในมหาวิทยาลัย (Admin View)
+                    {% else %}
+                        คุณกำลังจัดการข้อมูลเฉพาะ: <strong class="text-orange-400">{{ user_location.name }}</strong> (Staff View)
+                    {% endif %}
+                </p>
+            </div>
+
+            <!-- Quick Action -->
+            <div class="flex items-center gap-2">
+                <a href="{% url 'reservations_manage:reservation_list' %}" class="px-4 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs sm:text-sm shadow-md transition flex items-center gap-2">
+                    <i data-lucide="clipboard-check" class="w-4 h-4"></i>
+                    <span>ตรวจรับสินค้า</span>
+                </a>
+                <a href="{% url 'shop_manage:stock_list' %}" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs sm:text-sm border border-slate-700 transition flex items-center gap-2">
+                    <i data-lucide="boxes" class="w-4 h-4"></i>
+                    <span>ปรับปรุงสต็อก</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stat Metric Cards -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Metric 1: Active Reservations -->
+        <div class="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-xs flex items-center justify-between">
+            <div>
+                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">รายการจองรอรับ</p>
+                <p class="text-2xl sm:text-3xl font-black text-amber-600 mt-1">{{ active_reservations }}</p>
+                <p class="text-[10px] text-slate-400 mt-0.5">ล็อกสต็อกภายใน 4 ชม.</p>
+            </div>
+            <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center">
+                <i data-lucide="hourglass" class="w-6 h-6"></i>
+            </div>
+        </div>
+
+        <!-- Metric 2: Total Units in Stock -->
+        <div class="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-xs flex items-center justify-between">
+            <div>
+                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                    {% if is_admin %}สต็อกรวมทุกสาขา{% else %}สต็อกคงเหลือสาขาคุณ{% endif %}
+                </p>
+                <p class="text-2xl sm:text-3xl font-black text-emerald-600 mt-1">{{ total_units_stock }}</p>
+                <p class="text-[10px] text-slate-400 mt-0.5">ชิ้น พร้อมจำหน่าย</p>
+            </div>
+            <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                <i data-lucide="box" class="w-6 h-6"></i>
+            </div>
+        </div>
+
+        <!-- Metric 3: Picked Up Today -->
+        <div class="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-xs flex items-center justify-between">
+            <div>
+                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">รับสินค้าแล้ววันนี้</p>
+                <p class="text-2xl sm:text-3xl font-black text-blue-600 mt-1">{{ picked_up_today }}</p>
+                <p class="text-[10px] text-slate-400 mt-0.5">รายการชำระสำเร็จ</p>
+            </div>
+            <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                <i data-lucide="check-circle" class="w-6 h-6"></i>
+            </div>
+        </div>
+
+        <!-- Metric 4: Expired Overdue -->
+        <div class="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-xs flex items-center justify-between">
+            <div>
+                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">หมดเวลา 4 ชม. คืนสต็อก</p>
+                <p class="text-2xl sm:text-3xl font-black text-rose-600 mt-1">{{ expired_reservations }}</p>
+                <p class="text-[10px] text-slate-400 mt-0.5">รายการที่ถูกยกเลิกอัตโนมัติ</p>
+            </div>
+            <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center">
+                <i data-lucide="rotate-ccw" class="w-6 h-6"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Multi-Location Breakdown (Admin View Only) -->
+    {% if is_admin and locations_summary %}
+        <div class="bg-white rounded-3xl border border-slate-200/90 p-6 shadow-xs">
+            <h3 class="text-base font-bold text-slate-900 mb-4 flex items-center gap-2">
+                <i data-lucide="map-pin" class="w-5 h-5 text-orange-600"></i>
+                สรุปสถานะแยกตามจุดจำหน่ายในมหาวิทยาลัย (Admin Overview)
+            </h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {% for loc_info in locations_summary %}
+                    <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200/80">
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="font-bold text-sm text-slate-800 truncate">{{ loc_info.location.name }}</h4>
+                        </div>
+                        <p class="text-[11px] text-slate-500 mb-3">{{ loc_info.location.location_detail }}</p>
+                        <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200 text-xs">
+                            <div>
+                                <span class="text-[10px] text-slate-400 block">คงเหลือ</span>
+                                <span class="font-bold text-slate-800">{{ loc_info.total_stock }} ชิ้น</span>
+                            </div>
+                            <div>
+                                <span class="text-[10px] text-slate-400 block">รอรับสินค้า</span>
+                                <span class="font-bold text-amber-600">{{ loc_info.active_reservations }} รายการ</span>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Two Columns: Recent Reservations & Low Stock Alert -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <!-- Recent Reservations (8 cols) -->
+        <div class="lg:col-span-8 bg-white rounded-3xl border border-slate-200/90 p-6 shadow-xs">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h3 class="font-bold text-slate-900 text-base">รายการจองล่าสุด</h3>
+                    <p class="text-xs text-slate-500">แสดงรายการจองที่ทำเข้ามาในระบบ</p>
+                </div>
+                <a href="{% url 'reservations_manage:reservation_list' %}" class="text-xs font-semibold text-kmutnb hover:text-orange-700 flex items-center gap-1">
+                    ดูทั้งหมด <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                </a>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                    <thead class="bg-slate-50 text-slate-400 font-bold uppercase border-b border-slate-200">
+                        <tr>
+                            <th class="p-3">รหัสการจอง</th>
+                            <th class="p-3">ผู้จอง (รหัสนักศึกษา)</th>
+                            <th class="p-3">สินค้า</th>
+                            <th class="p-3">จุดรับ</th>
+                            <th class="p-3">สถานะ</th>
+                            <th class="p-3 text-right">ดำเนินการ</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        {% for r in recent_reservations %}
+                            <tr class="hover:bg-slate-50/80 transition">
+                                <td class="p-3 font-mono font-bold text-slate-900">{{ r.reservation_code }}</td>
+                                <td class="p-3 font-semibold text-slate-700">{{ r.student_id }}</td>
+                                <td class="p-3 truncate max-w-xs font-medium text-slate-800">{{ r.product.name }} (x{{ r.quantity }})</td>
+                                <td class="p-3 text-slate-500">{{ r.location.name }}</td>
+                                <td class="p-3">
+                                    {% include 'partials/status_badge.html' with status=r.status %}
+                                </td>
+                                <td class="p-3 text-right">
+                                    {% if r.status == 'reserved' %}
+                                        <form method="POST" action="{% url 'reservations_manage:mark_pickup' r.id %}" class="inline">
+                                            {% csrf_token %}
+                                            <button type="submit" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg text-[11px] shadow-xs transition">
+                                                รับสินค้า
+                                            </button>
+                                        </form>
+                                    {% else %}
+                                        <span class="text-slate-400 text-[11px]">-</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="6" class="p-6 text-center text-slate-400 text-xs">ยังไม่มีรายการจอง</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Low Stock Warning (4 cols) -->
+        <div class="lg:col-span-4 bg-white rounded-3xl border border-slate-200/90 p-6 shadow-xs">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="font-bold text-slate-900 text-base flex items-center gap-2">
+                    <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-500"></i>
+                    สินค้าใกล้หมด (≤ 5 ชิ้น)
+                </h3>
+            </div>
+
+            <div class="space-y-3">
+                {% for item in low_stocks %}
+                    <div class="p-3 rounded-2xl bg-amber-50/60 border border-amber-200/80 flex items-center justify-between">
+                        <div class="min-w-0 flex-1 pr-2">
+                            <p class="font-bold text-xs text-slate-800 truncate">{{ item.product.name }}</p>
+                            <p class="text-[11px] text-slate-500">{{ item.location.name }}</p>
+                        </div>
+                        <div class="text-right shrink-0">
+                            <span class="px-2 py-0.5 rounded-md font-bold text-xs {% if item.stock == 0 %}bg-rose-100 text-rose-700{% else %}bg-amber-100 text-amber-800{% endif %}">
+                                {{ item.stock }} ชิ้น
+                            </span>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="py-8 text-center text-slate-400 text-xs">
+                        <i data-lucide="check-circle-2" class="w-8 h-8 mx-auto mb-1 text-emerald-500"></i>
+                        ไม่มีสินค้าที่สต็อกต่ำในขณะนี้
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-slate-100">
+                <a href="{% url 'shop_manage:stock_list' %}" class="w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs flex items-center justify-center gap-1.5 transition">
+                    <i data-lucide="boxes" class="w-3.5 h-3.5"></i>
+                    <span>จัดการสต็อกทั้งหมด</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

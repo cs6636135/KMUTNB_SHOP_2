@@ -1,0 +1,121 @@
+{% extends 'base_manage.html' %}
+
+{% block page_title %}จัดการข้อมูลสินค้า (Product Management){% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header with Action -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+            <h2 class="text-xl font-extrabold text-slate-900">สินค้าทั้งหมดในระบบ</h2>
+            <p class="text-xs text-slate-500">เพิ่ม ลบ แก้ไขข้อมูลสินค้า พร้อมกำหนดการเปิดจองออนไลน์</p>
+        </div>
+        <a href="{% url 'shop_manage:product_create' %}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs sm:text-sm shadow-md shadow-orange-500/20 transition">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            <span>เพิ่มสินค้าใหม่</span>
+        </a>
+    </div>
+
+    <!-- Filters -->
+    <div class="bg-white rounded-2xl border border-slate-200/90 p-4 shadow-xs">
+        <form method="GET" class="flex flex-col sm:flex-row items-center gap-3">
+            <div class="flex-1 w-full relative">
+                <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                <input type="text" name="q" value="{{ query }}" placeholder="ค้นหาชื่อสินค้า..." class="w-full pl-10 pr-4 py-2 rounded-xl border border-slate-200 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 text-slate-800">
+            </div>
+            <div class="w-full sm:w-64">
+                <select name="category" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 text-slate-700 bg-white">
+                    <option value="">ทุกหมวดหมู่</option>
+                    {% for cat in categories %}
+                        <option value="{{ cat.id }}" {% if selected_category == cat.id|stringformat:"s" %}selected{% endif %}>{{ cat.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="w-full sm:w-auto px-4 py-2 rounded-xl bg-slate-900 text-white text-xs sm:text-sm font-semibold hover:bg-slate-800 transition">
+                กรอง
+            </button>
+        </form>
+    </div>
+
+    <!-- Table of Products -->
+    <div class="bg-white rounded-3xl border border-slate-200/90 shadow-xs overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs sm:text-sm">
+                <thead class="bg-slate-50 text-slate-500 font-bold uppercase border-b border-slate-200 text-[11px]">
+                    <tr>
+                        <th class="p-4">รูปภาพ</th>
+                        <th class="p-4">ชื่อสินค้า</th>
+                        <th class="p-4">หมวดหมู่</th>
+                        <th class="p-4">ราคา</th>
+                        <th class="p-4">การจอง</th>
+                        <th class="p-4">สต็อกรวม</th>
+                        <th class="p-4 text-right">จัดการ</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    {% for p in products %}
+                        <tr class="hover:bg-slate-50/70 transition">
+                            <td class="p-4">
+                                <div class="w-12 h-12 rounded-xl bg-slate-100 overflow-hidden shrink-0">
+                                    {% if p.image_url %}
+                                        <img src="{{ p.image_url }}" alt="{{ p.name }}" class="w-full h-full object-cover">
+                                    {% else %}
+                                        <div class="w-full h-full flex items-center justify-center text-slate-400">
+                                            <i data-lucide="package" class="w-5 h-5"></i>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </td>
+                            <td class="p-4">
+                                <div class="font-bold text-slate-900">{{ p.name }}</div>
+                                <div class="text-[11px] text-slate-400 mt-0.5 line-clamp-1">{{ p.description|default:"-" }}</div>
+                            </td>
+                            <td class="p-4">
+                                <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-xs font-medium">
+                                    {{ p.category.name }}
+                                </span>
+                            </td>
+                            <td class="p-4 font-bold text-slate-900">
+                                ฿{{ p.price|floatformat:2 }}
+                            </td>
+                            <td class="p-4">
+                                {% if p.reservable %}
+                                    <span class="inline-flex items-center gap-1 text-emerald-600 font-semibold text-xs">
+                                        <i data-lucide="check" class="w-3.5 h-3.5"></i> เปิดจอง
+                                    </span>
+                                {% else %}
+                                    <span class="inline-flex items-center gap-1 text-slate-400 font-medium text-xs">
+                                        <i data-lucide="x" class="w-3.5 h-3.5"></i> ปิดจอง
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td class="p-4">
+                                <span class="font-bold {% if p.total_stock > 0 %}text-slate-800{% else %}text-rose-500{% endif %}">
+                                    {{ p.total_stock }} ชิ้น
+                                </span>
+                            </td>
+                            <td class="p-4 text-right">
+                                <div class="flex items-center justify-end gap-2">
+                                    <a href="{% url 'shop_manage:product_edit' p.id %}" class="p-2 text-slate-600 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition" title="แก้ไข">
+                                        <i data-lucide="pencil" class="w-4 h-4"></i>
+                                    </a>
+                                    <form method="POST" action="{% url 'shop_manage:product_delete' p.id %}" onsubmit="return confirm('คุณแน่ใจหรือไม่ว่าต้องการลบสินค้านี้?');" class="inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition" title="ลบ">
+                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="7" class="p-8 text-center text-slate-400">ไม่พบรายการสินค้า</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

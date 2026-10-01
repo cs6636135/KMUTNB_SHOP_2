@@ -1,0 +1,66 @@
+{% extends 'base_manage.html' %}
+
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto space-y-6">
+    <div class="flex items-center justify-between">
+        <h2 class="text-xl font-extrabold text-slate-900">{{ title }}</h2>
+        <a href="{% url 'shop_manage:location_list' %}" class="text-xs font-semibold text-slate-500 hover:text-slate-800 flex items-center gap-1">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i> กลับ
+        </a>
+    </div>
+
+    <div class="bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-8 shadow-xs">
+        <form method="POST" class="space-y-4">
+            {% csrf_token %}
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                    ชื่อจุดจำหน่าย / สาขา <span class="text-rose-500">*</span>
+                </label>
+                {{ form.name }}
+                {% if form.name.errors %}<p class="text-rose-500 text-xs mt-1">{{ form.name.errors.0 }}</p>{% endif %}
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                        ชื่อ/เลขอาคาร
+                    </label>
+                    {{ form.building }}
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                        ชั้น
+                    </label>
+                    {{ form.floor }}
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                        ห้อง / บริเวณ
+                    </label>
+                    {{ form.room }}
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                    คำอธิบายสถานที่และวิธีการเดินทางมารับ
+                </label>
+                {{ form.description }}
+            </div>
+
+            <div class="pt-4 flex items-center justify-end gap-3 border-t border-slate-100">
+                <a href="{% url 'shop_manage:location_list' %}" class="px-5 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50 transition">
+                    ยกเลิก
+                </a>
+                <button type="submit" class="px-6 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs sm:text-sm shadow-md transition flex items-center gap-2">
+                    <i data-lucide="save" class="w-4 h-4"></i>
+                    <span>บันทึกจุดจำหน่าย</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}รายการสินค้าทั้งหมด | KMUTNB Shop{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+    <!-- Header -->
+    <div class="mb-6">
+        <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900">สินค้าทั้งหมด</h1>
+        <p class="text-xs sm:text-sm text-slate-500 mt-1">ค้นหา ตรวจสอบสต็อกตามสาขา และจองสินค้าออนไลน์ล่วงหน้าได้ทันที</p>
+    </div>
+
+    <!-- Filter & Search Toolbar (HTMX Powered) -->
+    <div class="bg-white rounded-2xl border border-slate-200/90 p-4 mb-6 shadow-xs">
+        <form id="filter-form" hx-get="{% url 'shop:product_list' %}" hx-target="#product-grid-container" hx-trigger="change, submit" class="space-y-3">
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
+                <!-- Search Box -->
+                <div class="sm:col-span-6 relative">
+                    <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                    <input
+                        type="text"
+                        name="q"
+                        value="{{ search_query }}"
+                        placeholder="พิมพ์ชื่อสินค้าเพื่อค้นหาทันที..."
+                        class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-slate-800"
+                        hx-get="{% url 'shop:product_list' %}"
+                        hx-target="#product-grid-container"
+                        hx-trigger="keyup changed delay:300ms"
+                        hx-include="#filter-form"
+                    >
+                </div>
+
+                <!-- Category Dropdown -->
+                <div class="sm:col-span-4">
+                    <select name="category" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-slate-700 bg-white">
+                        <option value="">ทุกหมวดหมู่สินค้า</option>
+                        {% for cat in categories %}
+                            <option value="{{ cat.id }}" {% if selected_category == cat.id|stringformat:"s" %}selected{% endif %}>
+                                {{ cat.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Reservable Toggle Filter -->
+                <div class="sm:col-span-2 flex items-center justify-end">
+                    <label class="flex items-center gap-2 cursor-pointer text-xs font-semibold text-slate-700 select-none bg-slate-50 hover:bg-orange-50 p-2.5 rounded-xl border border-slate-200 w-full justify-center">
+                        <input type="checkbox" name="reservable" value="1" {% if reservable_filter == '1' %}checked{% endif %} class="rounded text-orange-600 focus:ring-orange-500 h-4 w-4">
+                        <span>จองออนไลน์ได้</span>
+                    </label>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Product Grid Container for HTMX -->
+    <div id="product-grid-container" class="relative min-h-[300px]">
+        <div class="htmx-indicator absolute inset-0 bg-white/70 backdrop-blur-xs flex items-center justify-center z-20">
+            <div class="flex items-center gap-2 text-sm font-semibold text-kmutnb">
+                <i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i>
+                <span>กำลังโหลดข้อมูล...</span>
+            </div>
+        </div>
+        {% include 'partials/product_list.html' with products=products %}
+    </div>
+</div>
+{% endblock %}

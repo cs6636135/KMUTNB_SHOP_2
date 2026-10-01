@@ -1,0 +1,19 @@
+<div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+    {% if products %}
+        {% for product in products %}
+            {% include 'partials/product_card.html' with product=product %}
+        {% endfor %}
+    {% else %}
+        <div class="col-span-full py-16 text-center bg-white rounded-2xl border border-dashed border-slate-200 p-8">
+            <div class="w-16 h-16 mx-auto rounded-full bg-orange-50 text-orange-500 flex items-center justify-center mb-4">
+                <i data-lucide="package-search" class="w-8 h-8"></i>
+            </div>
+            <h3 class="text-base font-bold text-slate-800">ไม่พบรายการสินค้าที่ค้นหา</h3>
+            <p class="text-xs text-slate-500 mt-1 max-w-sm mx-auto">ลองเปลี่ยนคำค้นหา หรือเลือกหมวดหมู่อื่นเพื่อดูสินค้าที่เปิดให้บริการ</p>
+            <a href="{% url 'shop:product_list' %}" class="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                รีเซ็ตตัวกรองทั้งหมด
+            </a>
+        </div>
+    {% endif %}
+</div>

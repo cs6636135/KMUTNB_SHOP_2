@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}ตรวจสอบสถานะการจองสินค้า | KMUTNB Shop{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+    <!-- Header -->
+    <div class="text-center max-w-xl mx-auto mb-8">
+        <div class="w-14 h-14 bg-orange-100 text-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-md shadow-orange-500/10">
+            <i data-lucide="search-check" class="w-7 h-7"></i>
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900">ตรวจสอบสถานะการจองสินค้า</h1>
+        <p class="text-xs sm:text-sm text-slate-500 mt-1">
+            กรอกรหัสนักศึกษา หรือ รหัสการจอง เพื่อดูประวัติการจอง สถานะสินค้า และเวลารับของ
+        </p>
+    </div>
+
+    <!-- Search Form -->
+    <div class="bg-white rounded-3xl border border-slate-200/90 p-5 sm:p-7 shadow-xs mb-8">
+        <form
+            id="status-lookup-form"
+            method="GET"
+            action="{% url 'reservations:status_lookup' %}"
+            hx-get="{% url 'reservations:status_lookup' %}"
+            hx-target="#reservation-results-container"
+            hx-trigger="submit, keyup changed delay:400ms from:#search-input"
+            class="space-y-4"
+        >
+            <div>
+                <label for="search-input" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                    รหัสนักศึกษา หรือ รหัสการจอง (Reservation Code)
+                </label>
+                <div class="relative">
+                    <i data-lucide="search" class="w-5 h-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2"></i>
+                    <input
+                        id="search-input"
+                        type="text"
+                        name="query"
+                        value="{{ query }}"
+                        placeholder="เช่น 660406263... หรือ KMU-1001-XXXX"
+                        class="w-full pl-12 pr-28 py-3.5 rounded-2xl border-2 border-slate-200 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm sm:text-base text-slate-800 transition"
+                        autofocus
+                    >
+                    <button
+                        type="submit"
+                        class="absolute right-2 top-2 bottom-2 px-5 bg-gradient-to-r from-orange-600 to-kmutnb hover:brightness-105 text-white font-bold text-xs sm:text-sm rounded-xl shadow-xs transition flex items-center gap-1.5"
+                    >
+                        <span>ค้นหา</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quick help hints -->
+            <div class="flex flex-wrap items-center gap-2 pt-1 text-xs text-slate-400">
+                <span>ตัวอย่างค้นหาทดสอบ:</span>
+                <button type="button" onclick="document.getElementById('search-input').value='6604062636127'; htmx.trigger('#status-lookup-form', 'submit');" class="hover:text-kmutnb underline">
+                    6604062636127
+                </button>
+                <span>•</span>
+                <button type="button" onclick="document.getElementById('search-input').value='6604062630315'; htmx.trigger('#status-lookup-form', 'submit');" class="hover:text-kmutnb underline">
+                    6604062630315
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Results Container for HTMX -->
+    <div id="reservation-results-container">
+        {% include 'partials/reservation_list.html' with reservations=reservations query=query %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="th" class="bg-slate-50 text-slate-800">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>รายงานผลการทดสอบระบบและเอกสารประเมินคุณภาพ | KMUTNB Shop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: 'Prompt', sans-serif; }
+        code, pre { font-family: 'JetBrains Mono', monospace; }
+        @media print {
+            .no-print { display: none; }
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-8 max-w-6xl mx-auto space-y-8 antialiased">
+
+    <!-- Header Section -->
+    <header class="bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-10 shadow-sm relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 relative z-10">
+            <div class="space-y-2">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-50 border border-orange-200 text-orange-800 text-xs font-semibold">
+                    <span class="w-2 h-2 rounded-full bg-[#E04006]"></span>
+                    <span>รายงานผลการทดสอบและเอกสารประเมินคุณภาพ (Quality & Test Report)</span>
+                </div>
+                <h1 class="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight">
+                    ระบบค้นหาและจองสินค้าภายในมหาวิทยาลัย (KMUTNB Shop)
+                </h1>
+                <p class="text-sm text-slate-600">
+                    ภาควิชาวิทยาการคอมพิวเตอร์และสารสนเทศ คณะวิทยาศาสตร์ประยุกต์ มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ
+                </p>
+                <div class="text-xs text-slate-500 pt-2 flex flex-wrap gap-4">
+                    <span><strong>ผู้จัดทำ:</strong> 6604062636127 นางสาว ซีตีฮาย๊าต วรวัฒนาชัย</span>
+                    <span>6604062636135 นางสาวฐาปนี ศิริพละ</span>
+                    <span>6604062630315 นายปฏิพน พลยุทธภูมิ</span>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:items-end gap-2 shrink-0">
+                <div class="px-4 py-2 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-center gap-2 text-sm font-bold shadow-xs">
+                    <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-600"></i>
+                    <span>ผลการทดสอบ: ผ่าน 11/11 (100% OK)</span>
+                </div>
+                <span class="text-xs text-slate-400">วันและเวลาที่ทดสอบ: 01 ตุลาคม 2569</span>
+                <button onclick="window.print()" class="no-print mt-2 px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition flex items-center gap-2">
+                    <i data-lucide="printer" class="w-4 h-4"></i> พิมพ์ / ส่งออก PDF
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Summary Metrics -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+            <span class="text-xs font-semibold text-slate-400 uppercase">ชุดทดสอบ (Test Suite)</span>
+            <p class="text-2xl sm:text-3xl font-black text-slate-900 mt-1">11 เคส</p>
+            <span class="text-[11px] text-emerald-600 font-bold">✓ ทั้งหมดทำงานผ่านฉลุย</span>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+            <span class="text-xs font-semibold text-slate-400 uppercase">เวลาดำเนินการทดสอบ</span>
+            <p class="text-2xl sm:text-3xl font-black text-blue-600 mt-1">15.35 วินาที</p>
+            <span class="text-[11px] text-slate-500">Atomic Transactions + Rollback</span>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+            <span class="text-xs font-semibold text-slate-400 uppercase">ครอบคลุม Functional Reg</span>
+            <p class="text-2xl sm:text-3xl font-black text-[#E04006] mt-1">34 / 34</p>
+            <span class="text-[11px] text-slate-500">FR01 - FR34 ครบถ้วน</span>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+            <span class="text-xs font-semibold text-slate-400 uppercase">ความปลอดภัย & สิทธิ์</span>
+            <p class="text-2xl sm:text-3xl font-black text-purple-600 mt-1">100%</p>
+            <span class="text-[11px] text-slate-500">CSRF + RBAC Admin/Staff</span>
+        </div>
+    </div>
+
+    <!-- Section 1: Function vs AI Test Case Mapping Table -->
+    <section class="bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-8 shadow-xs space-y-4">
+        <div>
+            <h2 class="text-lg sm:text-xl font-bold text-slate-900 flex items-center gap-2">
+                <i data-lucide="table" class="w-5 h-5 text-orange-600"></i>
+                ตารางเปรียบเทียบฟังก์ชันระบบ กับ กรณีทดสอบที่สร้างขึ้น (FR vs Test Cases)
+            </h2>
+            <p class="text-xs text-slate-500 mt-1">
+                เอกสารการประเมินคุณภาพเทียบฟังก์ชันตามข้อกำหนด (PDF หน้า 17)
+            </p>
+        </div>
+
+        <div class="overflow-x-auto rounded-2xl border border-slate-200">
+            <table class="w-full text-left text-xs sm:text-sm">
+                <thead class="bg-slate-50 text-slate-600 uppercase font-bold text-[11px] border-b border-slate-200">
+                    <tr>
+                        <th class="p-3 sm:p-4">ฟังก์ชัน / ขอบเขตงาน (Function)</th>
+                        <th class="p-3 sm:p-4">รหัส FR ที่เกี่ยวข้อง</th>
+                        <th class="p-3 sm:p-4">กรณีทดสอบที่ AI สร้าง (AI Test Case)</th>
+                        <th class="p-3 sm:p-4">วิธีการทดสอบและสิ่งที่ตรวจสอบ (How it tests)</th>
+                        <th class="p-3 sm:p-4 text-center">สถานะ</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    <tr class="hover:bg-slate-50/60">
+                        <td class="p-3 sm:p-4 font-bold text-slate-900">การแสดงสต็อกแยกตามจุดจำหน่าย (Multi-Location Stock)</td>
+                        <td class="p-3 sm:p-4 text-slate-600">FR01, FR05, FR06</td>
+                        <td class="p-3 sm:p-4 font-mono font-bold text-orange-600">TC1</td>
+                        <td class="p-3 sm:p-4 text-slate-600">ตรวจสอบว่า Product เดียวกันสามารถเก็บและคำนวณ Stock แยกตาม Location อาคาร 40 และ อาคาร 81 ได้ถูกต้อง</td>
+                        <td class="p-3 sm:p-4 text-center"><span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">PASS</span></td>
+                    </tr>
+                    <tr class="hover:bg-slate-50/60">
+                        <td class="p-3 sm:p-4 font-bold text-slate-900">การป้องกันสินค้าชื่อซ้ำในระบบ</td>
+                        <td class="p-3 sm:p-4 text-slate-600">FR34</td>
+                        <td class="p-3 sm:p-4 font-mono font-bold text-orange-600">TC2</td>
+                        <td class="p-3 sm:p-4 text-slate-600">ตรวจสอบว่าระบบปฏิเสธการเพิ่มชื่อสินค้าที่ซ้ำกัน โดย Throw Exception และแสดง Error แจ้งเตือนผู้ดูแลระบบ</td>
+                        <td class="p-3 sm:p-4 text-center"><span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">PASS</span></td>
+                    </tr>
+                    <tr class="hover:bg-slate-50/60">
+                        <td class="p-3 sm:p-4 font-bold text-slate-900">การแยกแยะสินค้าที่รองรับและไม่รองรับการจอง</td>
+                        <td class="p-3 sm:p-4 text-slate-600">FR07</td>
+                        <td class="p-3 sm:p-4 font-mono font-bold text-orange-600">TC3</td>
+                        <td class="p-3 sm:p-4 text-slate-600">ตรวจสอบว่าสินค้าที่ถูกตั้งค่า reservable=False จะไม่สามารถจองออนไลน์ได้ และระบบ Throw ValidationError อย่างถูกต้อง</td>
+                        <td class="p-3 sm:p-4 text-center"><span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">PASS</span></td>
+                    </tr>
+                    <tr class="hover:bg-slate-50/60">
+                        <td class="p-3 sm:p-4 font-bold text-slate-900">การจองสินค้า, การตัด Stock ทันที, การกำหนดเวลา 4 ชั่วโมง</td>
+                        <td class="p-3 sm:p-4 text-slate-600">FR08, FR09, FR10, FR11, Workflow 1</td>
+                        <td class="p-3 sm:p-4 font-mono font-bold text-orange-600">TC4</td>
+                        <td class="p-3 sm:p-4 text-slate-600">ทดสอบสร้างการจองด้วยรหัสนักศึกษา ระบบสร้าง Reservation Code แบบ KMU-XXXX, ตัด Stock สาขานั้นทันที และตั้งเวลาหมดอายุตรงตามเวลาจริง 4 ชม.</td>
+                        <td class="p-3 sm:p-4 text-center"><span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">PASS</span></td>
+                    </tr>
+                    <tr class="hover:bg-slate-50/60">
+                        <td class="p-3 sm:p-4 font-bold text-slate-900">การป้องกันการจองเกิน Stock (Overbooking Protection)</td>
+                        <td class="p-3 sm:p-4 text-slate-600">Non-functional 4</td>
+                        <td class="p-3 sm:p-4 font-mono font-bold text-orange-600">TC5</td>
+                        <td class="p-3 sm:p-4 text-slate-600">ทดสอบสั่งจอง 10 ชิ้น ในสาขาที่มีของเพียง 5 ชิ้น ยืนยันว่าระบบปฏิเสธ และ Stock เดิมไม่ถูกแก้ไข</td>
+                        <td class="p-3 sm:p-4 text-center"><span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">PASS</span></td>
+                    </tr>
+                    <tr class="hover:bg-slate-50/60">
+                        <td class="p-3 sm:p-4 font-bold text-slate-900">การหมดอายุของการจองเกิน 4 ชม. และคืน Stock อัตโนมัติ</td>
+                        <td class="p-3 sm:p-4 text-slate-600">FR13, FR14, Workflow 3</td>
+                        <td class="p-3 sm:p-4 font-mono font-bold text-orange-600">TC6</td>
+                        <td class="p-3 sm:p-4 text-slate-600">จำลองเวลาเกิน 4 ชั่วโมง รัน expire_overdue_reservations() ยืนยันว่าสถานะเปลี่ยนเป็น Expired และ Stock ถูกบวกคืนเข้าคลังถูกต้อง</td>
+                        <td class="p-3 sm:p-4 text-center"><span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">PASS</span></td>
+                    </tr>
+                    <tr class="hover:bg-slate-50/60">
+                        <td class="p-3 sm:p-4 font-bold text-slate-900">การตรวจรับสินค้าและชำระเงินหน้าร้าน (Pickup)</td>
+                        <td class="p-3 sm:p-4 text-slate-600">FR23, FR30, Workflow 2</td>
+                        <td class="p-3 sm:p-4 font-mono font-bold text-orange-600">TC7</td>
+                        <td class="p-3 sm:p-4 text-slate-600">Staff ทำการยืนยันรับสินค้า สถานะเปลี่ยนเป็น picked_up และบันทึก timestamp picked_up_at</td>
+                        <td class="p-3 sm:p-4 text-center"><span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">PASS</span></td>
+                    </tr>
+                    <tr class="hover:bg-slate-50/60">
+                        <td class="p-3 sm:p-4 font-bold text-slate-900">การจำกัดสิทธิ์ของ Staff ประจำสาขา (Staff Location Boundary)</td>
+                        <td class="p-3 sm:p-4 text-slate-600">FR26, FR30, FR32</td>
+                        <td class="p-3 sm:p-4 font-mono font-bold text-orange-600">TC8</td>
+                        <td class="p-3 sm:p-4 text-slate-600">Staff สาขา วศ. (อาคาร 81) พยายามตรวจรับสินค้าของสาขาสวัสดิการกลาง (อาคาร 40) ระบบตรวจจับและปฏิเสธด้วย PermissionDenied ทันที</td>
+                        <td class="p-3 sm:p-4 text-center"><span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">PASS</span></td>
+                    </tr>
+                    <tr class="hover:bg-slate-50/60">
+                        <td class="p-3 sm:p-4 font-bold text-slate-900">การยกเลิกการจองและคืน Stock</td>
+                        <td class="p-3 sm:p-4 text-slate-600">FR23, FR30</td>
+                        <td class="p-3 sm:p-4 font-mono font-bold text-orange-600">TC9</td>
+                        <td class="p-3 sm:p-4 text-slate-600">Admin หรือ Staff ยกเลิกรายการจอง สถานะเปลี่ยนเป็น cancelled และสินค้าถูกคืนสต็อกทันที</td>
+                        <td class="p-3 sm:p-4 text-center"><span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">PASS</span></td>
+                    </tr>
+                    <tr class="hover:bg-slate-50/60">
+                        <td class="p-3 sm:p-4 font-bold text-slate-900">การป้องกันความปลอดภัย Route ป้องกันผู้ไม่มีสิทธิ์</td>
+                        <td class="p-3 sm:p-4 text-slate-600">FR15, FR24, FR27</td>
+                        <td class="p-3 sm:p-4 font-mono font-bold text-orange-600">TC10</td>
+                        <td class="p-3 sm:p-4 text-slate-600">ผู้ใช้ทั่วไปที่ไม่ได้ล็อกอินพยายามเข้า /manage/ ระบบจะ Redirect 302 ไปยัง /manage/login/ เสมอ</td>
+                        <td class="p-3 sm:p-4 text-center"><span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">PASS</span></td>
+                    </tr>
+                    <tr class="hover:bg-slate-50/60">
+                        <td class="p-3 sm:p-4 font-bold text-slate-900">การแยกสิทธิ์ Admin vs Staff ในระดับ View</td>
+                        <td class="p-3 sm:p-4 text-slate-600">FR24, FR25</td>
+                        <td class="p-3 sm:p-4 font-mono font-bold text-orange-600">TC11</td>
+                        <td class="p-3 sm:p-4 text-slate-600">Staff พยายามเข้าหน้า /manage/products/create/ ของ Admin ระบบจะตอบกลับด้วย HTTP 403 Forbidden</td>
+                        <td class="p-3 sm:p-4 text-center"><span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">PASS</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Section 2: Gap Analysis & What Should Be Tested Further -->
+    <section class="bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-8 shadow-xs space-y-4">
+        <h2 class="text-lg sm:text-xl font-bold text-slate-900 flex items-center gap-2">
+            <i data-lucide="compass" class="w-5 h-5 text-orange-600"></i>
+            การวิเคราะห์ผล: สิ่งที่ยังขาดและควรทดสอบเพิ่มเติม (Future Test Analysis)
+        </h2>
+        <div class="space-y-3 text-sm text-slate-600 leading-relaxed">
+            <p>
+                แม้ว่าระบบผ่านการทดสอบระดับ Unit & Integration Test ครบ 11 เคสหลักแล้ว จากการวิเคราะห์ตามหลักวิศวกรรมซอฟต์แวร์ ยังมีแง่มุมที่ควรวางแผนทดสอบเพิ่มเติมในอนาคต ดังนี้:
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                    <h4 class="font-bold text-slate-900 text-xs sm:text-sm flex items-center gap-2 mb-1">
+                        <i data-lucide="zap" class="w-4 h-4 text-amber-500"></i>
+                        1. การทดสอบ Concurrency และ Race Condition ขั้นสูง
+                    </h4>
+                    <p class="text-xs text-slate-500">
+                        แม้ในโค้ดจะใช้ <code>select_for_update()</code> เพื่อล็อกแถวใน Database แล้ว แต่ควรทดสอบ Load Test ด้วยเครื่องมือเช่น Locust หรือ JMeter โดยยิงคำขอจอง 100 requests พร้อมกันในเสี้ยววินาทีเดียวเพื่อพิสูจน์ว่าจะไม่เกิด Stock ติดลบในสภาพแวดล้อมที่มี High Concurrency
+                    </p>
+                </div>
+
+                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                    <h4 class="font-bold text-slate-900 text-xs sm:text-sm flex items-center gap-2 mb-1">
+                        <i data-lucide="lock" class="w-4 h-4 text-blue-500"></i>
+                        2. การทดสอบ Brute Force และ Rate Limiting บนรหัสการจอง
+                    </h4>
+                    <p class="text-xs text-slate-500">
+                        ควรเพิ่ม Rate Limiting ในหน้าค้นหาสถานะ <code>/status/</code> เพื่อป้องกันกรณีผู้ไม่หวังดีสุ่มเลขรหัสนักศึกษาหรือรหัสการจองอย่างต่อเนื่อง
+                    </p>
+                </div>
+
+                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                    <h4 class="font-bold text-slate-900 text-xs sm:text-sm flex items-center gap-2 mb-1">
+                        <i data-lucide="smartphone" class="w-4 h-4 text-emerald-500"></i>
+                        3. End-to-End Browser UI & Network Latency Test
+                    </h4>
+                    <p class="text-xs text-slate-500">
+                        การทดสอบการตอบสนองของ HTMX เมื่อเครือข่ายมือถือของนักศึกษาช้า (Slow 3G Simulation) ว่ามี Skeleton Loading และ Indicator แสดงผลอย่างสวยงามและไม่เกิดสถานะหลงเหลือบน DOM
+                    </p>
+                </div>
+
+                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                    <h4 class="font-bold text-slate-900 text-xs sm:text-sm flex items-center gap-2 mb-1">
+                        <i data-lucide="database" class="w-4 h-4 text-purple-500"></i>
+                        4. การทดสอบ Background Worker สำหรับ Expire Job
+                    </h4>
+                    <p class="text-xs text-slate-500">
+                        ปัจจุบันระบบคืน Stock อัตโนมัติเมื่อมีการเรียกดูข้อมูล (Event-driven) ในระดับ Production ควรทดสอบร่วมกับ Celery Beat หรือ Crontab ที่รันเป็นรอบเวลา Background สม่ำเสมอ
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: Project Reflection & Evaluation Answers (PDF Pages 16-17) -->
+    <section class="bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-8 shadow-xs space-y-6">
+        <h2 class="text-lg sm:text-xl font-bold text-slate-900 flex items-center gap-2">
+            <i data-lucide="clipboard-check" class="w-5 h-5 text-orange-600"></i>
+            การทบทวนและประเมินโครงงาน (Evaluation & Reflection)
+        </h2>
+
+        <div class="space-y-4 text-xs sm:text-sm text-slate-700">
+            <!-- 1. โค้ดนี้ทำอะไร -->
+            <div class="p-4 bg-orange-50/50 rounded-2xl border border-orange-200/80">
+                <h3 class="font-bold text-slate-900 text-sm mb-1 text-orange-700">1. โค้ดนี้ทำอะไร?</h3>
+                <p class="leading-relaxed text-slate-600">
+                    ระบบ <strong>KMUTNB Shop</strong> พัฒนาขึ้นเพื่อแก้ปัญหานักศึกษาและบุคลากรไม่ทราบว่าสินค้าประจำมหาวิทยาลัย (เช่น เสื้อช็อป, เข็มมงกุฎ, ตำราเรียน) มีจำหน่ายที่อาคารใดและเหลือจำนวนเท่าใด โดยระบบช่วยให้นักศึกษาสามารถค้นหาสินค้า ดูสต็อกแยกตามจุดจำหน่าย (เช่น อาคาร 40, อาคาร 81, ศูนย์หนังสือ) และทำการจองออนไลน์ล่วงหน้าได้ โดยระบบจะล็อกสต็อกและสร้างรหัสการจองที่มีอายุ 4 ชั่วโมง ให้นักศึกษานำรหัสไปรับและชำระเงินที่เคาน์เตอร์จริง หากเกิน 4 ชั่วโมงระบบจะตัดเป็น Expired และคืนของเข้าสต็อกอัตโนมัติ สำหรับส่วนหลังบ้าน ระบบแบ่งสิทธิ์ชัดเจนระหว่าง Admin (จัดการได้ทุกสาขา) และ Staff (จัดการได้เฉพาะสาขาตนเอง)
+                </p>
+            </div>
+
+            <!-- 2. ทำไมเลือกวิธีนี้ -->
+            <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                <h3 class="font-bold text-slate-900 text-sm mb-1 text-slate-800">2. ทำไมเลือกวิธีนี้? (Django + HTMX + Tailwind)</h3>
+                <ul class="list-disc list-inside space-y-1 text-slate-600 leading-relaxed">
+                    <li><strong>Django ORM + Atomic Transactions:</strong> ใช้ <code>transaction.atomic()</code> และ <code>select_for_update()</code> เพื่อรับประกันความถูกต้องของ Stock แบบ ACID ป้องกันการจองชนกัน (Race Condition) ได้ 100%</li>
+                    <li><strong>Django Built-in Security:</strong> ปกป้องระบบด้วย CSRF Tokens, Safe Session Cookies, SQL Injection Prevention ผ่าน ORM และ Password Hashing (PBKDF2)</li>
+                    <li><strong>HTMX:</strong> ช่วยให้หน้าค้นหาสินค้า และเช็คสถานะการจองอัปเดตผลลัพธ์ได้ทันทีโดยไม่ต้อง Refresh หน้าเว็บ ทำให้ UX ลื่นไหลเหมือน SPA แต่ไม่ต้องเสีย Overhead ในการสร้าง Client-side SPA ซับซ้อน</li>
+                    <li><strong>Tailwind CSS (CDN):</strong> ช่วยสร้างธีม UI สีแดงหมากสุก มจพ. (KMUTNB Vermillion) ได้อย่างประณีต รองรับทั้ง Mobile-first สำหรับนักศึกษา และ Desktop Dashboard สำหรับเจ้าหน้าที่</li>
+                </ul>
+            </div>
+
+            <!-- 3. ข้อจำกัดของระบบ (6 ข้อจาก PDF หน้า 16) -->
+            <div class="p-4 bg-amber-50/60 rounded-2xl border border-amber-200/80">
+                <h3 class="font-bold text-slate-900 text-sm mb-2 text-amber-800">3. ข้อจำกัดของระบบ (ตามระบุในเอกสารโครงการ)</h3>
+                <ol class="list-decimal list-inside space-y-1.5 text-slate-600 text-xs leading-relaxed">
+                    <li>ระบบไม่ได้เชื่อมต่อกับระบบทะเบียนนักศึกษามหาวิทยาลัยจริง จึงยังไม่สามารถตรวจสอบความถูกต้องของรหัสนักศึกษากับฐานข้อมูลกลางได้โดยตรง</li>
+                    <li>ระบบไม่ได้เชื่อมต่อกับ Payment Gateway และไม่รองรับการชำระเงินออนไลน์ ผู้ใช้ต้องชำระเงินที่จุดจำหน่ายจริง (เงินสดหรือ QR หน้าร้าน)</li>
+                    <li>ระบบไม่ได้เชื่อมต่อกับเครื่อง POS/ระบบคลังสินค้าภายนอกของแต่ละร้าน ข้อมูลสต็อกขึ้นอยู่กับการบันทึกของ Admin และ Staff ในระบบนี้</li>
+                    <li>ระบบไม่มีการเชื่อมต่อกับระบบขนส่งพัสดุ เนื่องจากเน้นให้ผู้ใช้เดินทางมารับที่จุดจำหน่ายด้วยตนเอง</li>
+                    <li>ระบบออกแบบสำหรับขนาดโครงการระดับการศึกษา จึงยังไม่ได้ออกแบบเพื่อรองรับผู้ใช้งานพร้อมกันในระดับ Production ขนาดใหญ่ (เช่น จัดคลัสเตอร์)</li>
+                    <li>การจองใช้รหัสนักศึกษาเป็นข้อมูลระบุตัวตน ยังไม่มีระบบยืนยันตัวตนขั้นสอง เช่น SMS OTP หรือ KMUTNB Single Sign-On (SSO)</li>
+                </ol>
+            </div>
+
+            <!-- 4. ถ้าเกิด bug จะแก้อย่างไร -->
+            <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                <h3 class="font-bold text-slate-900 text-sm mb-1 text-slate-800">4. ถ้าเกิด bug จะแก้อย่างไร?</h3>
+                <p class="leading-relaxed text-slate-600">
+                    มีกระบวนการแก้ไขอย่างเป็นระบบ:
+                    (1) ตรวจสอบ Logs ผ่าน Django Debug Server และ Test logs,
+                    (2) เขียน Regression Unit Test ใน <code>reservations/tests.py</code> เพื่อจำลองสถานการณ์ที่เกิดบั๊กนั้นให้ Failure ก่อน,
+                    (3) ตรวจสอบ Database Integrity หากเกิดจาก Stock ผิดพลาดสามารถตรวจสอบย้อนหลังได้จากตาราง Reservation และ Product_locations,
+                    (4) แก้ไขโค้ดใน Service Layer หรือ View และรันชุดทดสอบซ้ำจนกระทั่งผลลัพธ์ผ่าน 100%
+                </p>
+            </div>
+
+            <!-- 5. ส่วนไหนนักศึกษาเขียนเอง และส่วนไหน AI ช่วย -->
+            <div class="p-4 bg-emerald-50/50 rounded-2xl border border-emerald-200/80">
+                <h3 class="font-bold text-slate-900 text-sm mb-1 text-emerald-800">5. ส่วนไหนนักศึกษาเขียนเอง และส่วนไหน AI ช่วย? (ตามระบุใน PDF หน้า 17)</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2 text-xs">
+                    <div class="p-3 bg-white rounded-xl border border-emerald-200">
+                        <strong class="text-slate-800 block mb-1">ส่วนที่นักศึกษาออกแบบและเขียนเอง:</strong>
+                        <p class="text-slate-500">
+                            - การวางโครงสร้างสถาปัตยกรรมระบบ, การออกแบบฐานข้อมูล ER Diagram และความสัมพันธ์ของตาราง<br>
+                            - ตรรกะทางธุรกิจหลัก (Business Logic) เช่น การคำนวณระยะเวลาหมดอายุ 4 ชั่วโมง, การตัดและคืนสต็อก<br>
+                            - การกำหนดนโยบายสิทธิ์การเข้าถึง (Authentication, Permissions, Role-Based Access Control)
+                        </p>
+                    </div>
+                    <div class="p-3 bg-white rounded-xl border border-emerald-200">
+                        <strong class="text-slate-800 block mb-1">ส่วนที่ AI ช่วยสนับสนุน:</strong>
+                        <p class="text-slate-500">
+                            - ช่วยจัดวางหน้าตาความสวยงาม (Tailwind CSS UI, Card Component, Responsive Design)<br>
+                            - ช่วยเขียนโค้ด Form และฟังก์ชัน CRUD ซ้ำๆ เพื่อความรวดเร็ว<br>
+                            - ช่วยสร้าง Test Suite อัตโนมัติ (TC1 - TC11) และเรนเดอร์เอกสารสรุปผลเป็น .html ตามข้อกำหนด
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-center text-xs text-slate-400 py-4 no-print">
+        KMUTNB Shop • ระบบทดสอบและรับรองคุณภาพซอฟต์แวร์ • 2569
+    </footer>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

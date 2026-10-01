@@ -1,0 +1,89 @@
+{% extends 'base_manage.html' %}
+
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto space-y-6">
+    <div class="flex items-center justify-between">
+        <h2 class="text-xl font-extrabold text-slate-900">{{ title }}</h2>
+        <a href="{% url 'shop_manage:product_list' %}" class="text-xs font-semibold text-slate-500 hover:text-slate-800 flex items-center gap-1">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i> กลับ
+        </a>
+    </div>
+
+    <div class="bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-8 shadow-xs">
+        <form method="POST" class="space-y-4">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="p-4 bg-rose-50 border border-rose-200 text-rose-700 text-xs rounded-xl">
+                    {{ form.non_field_errors.0 }}
+                </div>
+            {% endif %}
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                    หมวดหมู่สินค้า <span class="text-rose-500">*</span>
+                </label>
+                {{ form.category }}
+                {% if form.category.errors %}<p class="text-rose-500 text-xs mt-1">{{ form.category.errors.0 }}</p>{% endif %}
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                    ชื่อสินค้า <span class="text-rose-500">*</span>
+                </label>
+                {{ form.name }}
+                {% if form.name.errors %}<p class="text-rose-500 text-xs mt-1">{{ form.name.errors.0 }}</p>{% endif %}
+                <p class="text-[11px] text-slate-400 mt-1">ระบบมีการป้องกันการใส่ชื่อสินค้าซ้ำกัน (FR34)</p>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                    รายละเอียดสินค้า
+                </label>
+                {{ form.description }}
+                {% if form.description.errors %}<p class="text-rose-500 text-xs mt-1">{{ form.description.errors.0 }}</p>{% endif %}
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                        ราคาสินค้า (บาท) <span class="text-rose-500">*</span>
+                    </label>
+                    {{ form.price }}
+                    {% if form.price.errors %}<p class="text-rose-500 text-xs mt-1">{{ form.price.errors.0 }}</p>{% endif %}
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                        URL รูปภาพสินค้า
+                    </label>
+                    {{ form.image_url }}
+                    {% if form.image_url.errors %}<p class="text-rose-500 text-xs mt-1">{{ form.image_url.errors.0 }}</p>{% endif %}
+                </div>
+            </div>
+
+            <div class="pt-2">
+                <label class="flex items-center gap-3 cursor-pointer p-3 bg-slate-50 hover:bg-orange-50/50 rounded-2xl border border-slate-200 transition">
+                    {{ form.reservable }}
+                    <div>
+                        <span class="text-xs font-bold text-slate-800">เปิดให้จองล่วงหน้าผ่านเว็บไซต์</span>
+                        <p class="text-[11px] text-slate-500">นักศึกษาจะสามารถเลือกจุดรับและกดจองได้ (FR07)</p>
+                    </div>
+                </label>
+            </div>
+
+            <div class="pt-4 flex items-center justify-end gap-3 border-t border-slate-100">
+                <a href="{% url 'shop_manage:product_list' %}" class="px-5 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50 transition">
+                    ยกเลิก
+                </a>
+                <button type="submit" class="px-6 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs sm:text-sm shadow-md shadow-orange-500/20 transition flex items-center gap-2">
+                    <i data-lucide="save" class="w-4 h-4"></i>
+                    <span>บันทึกสินค้า</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

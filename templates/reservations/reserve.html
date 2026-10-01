@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+
+{% block title %}ใบยืนยันการจองสินค้า {{ reservation.reservation_code }} | KMUTNB Shop{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto px-4 py-8 sm:py-12">
+    <!-- Success Banner -->
+    <div class="text-center mb-6">
+        <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3 shadow-md shadow-emerald-500/10">
+            <i data-lucide="check" class="w-8 h-8 stroke-[2.5]"></i>
+        </div>
+        <h1 class="text-2xl font-extrabold text-slate-900">การจองสินค้าสำเร็จ!</h1>
+        <p class="text-xs sm:text-sm text-slate-500 mt-1">
+            กรุณาแคปหน้าจอนี้ หรือนำรหัสการจองไปแสดงต่อเจ้าหน้าที่ที่จุดจำหน่าย
+        </p>
+    </div>
+
+    <!-- Digital Reservation Slip (Ticket Style) -->
+    <div class="bg-white rounded-3xl border-2 border-orange-200/80 shadow-xl overflow-hidden relative">
+        <!-- Top Ribbon -->
+        <div class="bg-gradient-to-r from-orange-600 to-kmutnb p-5 text-white flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+                <i data-lucide="store" class="w-6 h-6"></i>
+                <div>
+                    <h2 class="font-bold text-sm leading-tight">KMUTNB SHOP TICKET</h2>
+                    <p class="text-[10px] text-orange-200">มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ</p>
+                </div>
+            </div>
+            <div>
+                {% include 'partials/status_badge.html' with status=reservation.status %}
+            </div>
+        </div>
+
+        <!-- Reservation Code & 4-Hour Countdown Box -->
+        <div class="p-6 bg-orange-50/50 border-b border-dashed border-orange-200 text-center">
+            <p class="text-xs uppercase font-bold tracking-widest text-slate-400">รหัสการจองของคุณ</p>
+            <div class="my-2 flex items-center justify-center gap-2">
+                <span class="text-2xl sm:text-3xl font-black font-mono text-kmutnb tracking-wider">{{ reservation.reservation_code }}</span>
+                <button
+                    type="button"
+                    onclick="navigator.clipboard.writeText('{{ reservation.reservation_code }}'); alert('คัดลอกรหัสการจองแล้ว');"
+                    class="p-2 rounded-lg bg-orange-100 hover:bg-orange-200 text-orange-800 transition"
+                    title="คัดลอกรหัส"
+                >
+                    <i data-lucide="copy" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <!-- Countdown Timer -->
+            {% if reservation.status == 'reserved' %}
+                <div class="mt-4 p-3 bg-white rounded-2xl border border-amber-200 inline-block max-w-sm w-full shadow-xs">
+                    <p class="text-[11px] font-semibold text-amber-700 flex items-center justify-center gap-1.5 mb-1">
+                        <i data-lucide="clock" class="w-4 h-4 text-amber-600 animate-spin"></i>
+                        <span>เวลานับถอยหลังรับสินค้า (4 ชั่วโมง)</span>
+                    </p>
+                    <div id="countdown" class="text-xl font-bold font-mono text-amber-900 tracking-wider">
+                        กำลังคำนวณ...
+                    </div>
+                    <p class="text-[10px] text-slate-400 mt-0.5">
+                        หมดอายุ: {{ reservation.expires_at|date:"d M Y เวลา H:i" }} น.
+                    </p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Ticket Body Details -->
+        <div class="p-6 space-y-4 text-sm">
+            <!-- Student / Customer -->
+            <div class="flex justify-between items-center py-2 border-b border-slate-100">
+                <span class="text-xs text-slate-500">รหัสนักศึกษา / ผู้จอง:</span>
+                <span class="font-bold text-slate-800 font-mono text-base">{{ reservation.student_id }}</span>
+            </div>
+
+            <!-- Product -->
+            <div class="flex items-center gap-3 py-2 border-b border-slate-100">
+                <div class="w-12 h-12 rounded-xl bg-slate-100 overflow-hidden shrink-0">
+                    {% if reservation.product.image_url %}
+                        <img src="{{ reservation.product.image_url }}" alt="{{ reservation.product.name }}" class="w-full h-full object-cover">
+                    {% else %}
+                        <div class="w-full h-full flex items-center justify-center text-slate-400">
+                            <i data-lucide="package" class="w-6 h-6"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="flex-1 min-w-0">
+                    <h3 class="font-bold text-slate-800 text-sm truncate">{{ reservation.product.name }}</h3>
+                    <p class="text-xs text-slate-500">
+                        จำนวน: <strong class="text-slate-800">{{ reservation.quantity }}</strong> ชิ้น
+                        (ชิ้นละ ฿{{ reservation.product.price|floatformat:2 }})
+                    </p>
+                </div>
+                <div class="text-right">
+                    <span class="font-black text-slate-900 text-base">฿{{ reservation.total_price|floatformat:2 }}</span>
+                </div>
+            </div>
+
+            <!-- Pickup Location Details -->
+            <div class="py-2 border-b border-slate-100 space-y-1">
+                <div class="flex items-center gap-2 text-kmutnb font-bold text-xs uppercase">
+                    <i data-lucide="map-pin" class="w-4 h-4"></i>
+                    <span>สถานที่รับสินค้าและชำระเงิน</span>
+                </div>
+                <p class="font-bold text-slate-900 text-sm">{{ reservation.location.name }}</p>
+                <p class="text-xs text-slate-600">{{ reservation.location.location_detail }}</p>
+                <p class="text-[11px] text-slate-400">{{ reservation.location.description }}</p>
+            </div>
+
+            <!-- Instructions -->
+            <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200/80 text-xs text-slate-600 space-y-1.5">
+                <p class="font-bold text-slate-800 flex items-center gap-1.5">
+                    <i data-lucide="help-circle" class="w-4 h-4 text-orange-500"></i>
+                    ขั้นตอนการรับสินค้า:
+                </p>
+                <ol class="list-decimal list-inside space-y-1 pl-1 text-[11px] text-slate-500 leading-relaxed">
+                    <li>เดินทางไปยังจุดจำหน่าย <strong>{{ reservation.location.name }}</strong> ภายในเวลาที่กำหนด</li>
+                    <li>แจ้งรหัสการจอง <strong>{{ reservation.reservation_code }}</strong> หรือรหัสนักศึกษาแก่เจ้าหน้าที่</li>
+                    <li>ชำระเงินสดหรือ Thai QR Payment จำนวน <strong>฿{{ reservation.total_price|floatformat:2 }}</strong></li>
+                    <li>รับสินค้าพร้อมตรวจสอบความถูกต้อง</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Ticket Footer Buttons -->
+        <div class="p-6 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row gap-3">
+            <button
+                type="button"
+                onclick="window.print()"
+                class="flex-1 py-3 px-4 rounded-xl bg-white hover:bg-slate-100 border border-slate-300 font-semibold text-xs sm:text-sm text-slate-700 flex items-center justify-center gap-2 transition"
+            >
+                <i data-lucide="printer" class="w-4 h-4"></i>
+                <span>พิมพ์ / บันทึกหน้านี้</span>
+            </button>
+            <a
+                href="{% url 'reservations:status_lookup' %}?query={{ reservation.student_id }}"
+                class="flex-1 py-3 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 transition"
+            >
+                <i data-lucide="list" class="w-4 h-4"></i>
+                <span>ดูประวัติการจองทั้งหมด</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Countdown Script -->
+{% if reservation.status == 'reserved' %}
+<script>
+    function updateCountdown() {
+        const expiresAt = new Date("{{ reservation.expires_at.isoformat }}").getTime();
+        const now = new Date().getTime();
+        const distance = expiresAt - now;
+
+        const countdownElem = document.getElementById("countdown");
+        if (!countdownElem) return;
+
+        if (distance < 0) {
+            countdownElem.innerHTML = "<span class='text-rose-600'>หมดอายุแล้ว (สินค้าถูกคืนสู่สต็อก)</span>";
+            return;
+        }
+
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        countdownElem.innerText =
+            String(hours).padStart(2, '0') + " ชั่วโมง " +
+            String(minutes).padStart(2, '0') + " นาที " +
+            String(seconds).padStart(2, '0') + " วินาที";
+    }
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+</script>
+{% endif %}
+{% endblock %}

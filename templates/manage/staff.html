@@ -1,0 +1,102 @@
+{% extends 'base_manage.html' %}
+
+{% block page_title %}จัดการบัญชีเจ้าหน้าที่และสิทธิ์การใช้งาน (Staff Management){% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header with Action -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+            <h2 class="text-xl font-extrabold text-slate-900">บัญชีผู้ใช้งานระบบ (Admin & Staff)</h2>
+            <p class="text-xs text-slate-500">จัดการบัญชีเจ้าหน้าที่ กำหนดบทบาท และมอบหมายจุดจำหน่ายที่รับผิดชอบ (FR25, FR26)</p>
+        </div>
+        <a href="{% url 'accounts:staff_create' %}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs sm:text-sm shadow-md transition">
+            <i data-lucide="user-plus" class="w-4 h-4"></i>
+            <span>เพิ่มบัญชีเจ้าหน้าที่ใหม่</span>
+        </a>
+    </div>
+
+    <!-- Table of Users -->
+    <div class="bg-white rounded-3xl border border-slate-200/90 shadow-xs overflow-hidden">
+        <table class="w-full text-left text-xs sm:text-sm">
+            <thead class="bg-slate-50 text-slate-500 font-bold uppercase border-b border-slate-200 text-[11px]">
+                <tr>
+                    <th class="p-4">ชื่อผู้ใช้ (Username)</th>
+                    <th class="p-4">ชื่อ - นามสกุล</th>
+                    <th class="p-4">อีเมล</th>
+                    <th class="p-4">ระดับสิทธิ์ (Role)</th>
+                    <th class="p-4">จุดจำหน่ายที่รับผิดชอบ (Location)</th>
+                    <th class="p-4">สถานะบัญชี</th>
+                    <th class="p-4 text-right">จัดการ</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+                {% for member in staff_members %}
+                    <tr class="hover:bg-slate-50/70 transition">
+                        <td class="p-4 font-mono font-bold text-slate-900">
+                            {{ member.username }}
+                        </td>
+                        <td class="p-4 font-medium text-slate-800">
+                            {{ member.get_full_name|default:"-" }}
+                        </td>
+                        <td class="p-4 text-slate-500">
+                            {{ member.email|default:"-" }}
+                        </td>
+                        <td class="p-4">
+                            {% if member.role == 'admin' %}
+                                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-300">
+                                    <i data-lucide="shield" class="w-3 h-3 text-amber-600"></i>
+                                    Admin (ผู้ดูแลระบบ)
+                                </span>
+                            {% else %}
+                                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                                    <i data-lucide="user" class="w-3 h-3 text-emerald-600"></i>
+                                    Staff (เจ้าหน้าที่สาขา)
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td class="p-4">
+                            {% if member.location %}
+                                <div class="font-semibold text-slate-800 flex items-center gap-1.5">
+                                    <i data-lucide="map-pin" class="w-3.5 h-3.5 text-orange-500"></i>
+                                    <span>{{ member.location.name }}</span>
+                                </div>
+                            {% else %}
+                                <span class="text-xs text-slate-400">ทุกสาขา (ส่วนกลาง)</span>
+                            {% endif %}
+                        </td>
+                        <td class="p-4">
+                            {% if member.is_active %}
+                                <span class="text-emerald-600 font-semibold text-xs flex items-center gap-1">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> ใช้งานได้
+                                </span>
+                            {% else %}
+                                <span class="text-rose-500 font-semibold text-xs">ระงับการใช้งาน</span>
+                            {% endif %}
+                        </td>
+                        <td class="p-4 text-right">
+                            <div class="flex items-center justify-end gap-2">
+                                <a href="{% url 'accounts:staff_edit' member.id %}" class="p-2 text-slate-400 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition" title="แก้ไขข้อมูล">
+                                    <i data-lucide="pencil" class="w-4 h-4"></i>
+                                </a>
+                                {% if member != request.user %}
+                                    <form method="POST" action="{% url 'accounts:staff_delete' member.id %}" onsubmit="return confirm('ยืนยันลบบัญชีผู้ใช้ {{ member.username }} หรือไม่?');" class="inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition" title="ลบ">
+                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="7" class="p-8 text-center text-slate-400">ยังไม่มีผู้ใช้งาน</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

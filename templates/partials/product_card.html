@@ -1,0 +1,90 @@
+<div class="group bg-white rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-xl hover:border-orange-200 transition-all duration-300 flex flex-col overflow-hidden">
+    <!-- Image Header -->
+    <a href="{% url 'shop:product_detail' product.id %}" class="relative block aspect-4/3 bg-slate-100 overflow-hidden">
+        {% if product.image_url %}
+            <img src="{{ product.image_url }}" alt="{{ product.name }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy">
+        {% else %}
+            <div class="w-full h-full flex items-center justify-center text-slate-300 bg-gradient-to-br from-slate-50 to-slate-100">
+                <i data-lucide="package" class="w-12 h-12 stroke-1"></i>
+            </div>
+        {% endif %}
+
+        <!-- Reservable Status Badge -->
+        <div class="absolute top-2.5 left-2.5">
+            {% if product.reservable %}
+                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-emerald-600/90 text-white backdrop-blur-md shadow-xs">
+                    <i data-lucide="calendar-check" class="w-3.5 h-3.5"></i>
+                    จองออนไลน์ได้
+                </span>
+            {% else %}
+                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-slate-800/80 text-white backdrop-blur-md">
+                    <i data-lucide="store" class="w-3.5 h-3.5"></i>
+                    ซื้อที่หน้าร้านเท่านั้น
+                </span>
+            {% endif %}
+        </div>
+
+        <!-- Category Tag -->
+        <div class="absolute top-2.5 right-2.5">
+            <span class="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-white/90 text-slate-700 shadow-xs backdrop-blur-sm">
+                {{ product.category.name }}
+            </span>
+        </div>
+    </a>
+
+    <!-- Product Body -->
+    <div class="p-4 flex-1 flex flex-col justify-between">
+        <div>
+            <a href="{% url 'shop:product_detail' product.id %}" class="block font-semibold text-slate-900 group-hover:text-kmutnb transition line-clamp-2 text-sm sm:text-base leading-snug">
+                {{ product.name }}
+            </a>
+            <p class="mt-1 text-xs text-slate-500 line-clamp-2 leading-relaxed">
+                {{ product.description|default:"ไม่มีคำอธิบายเพิ่มเติม" }}
+            </p>
+        </div>
+
+        <!-- Price and Stock Details -->
+        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+            <div>
+                <p class="text-[10px] uppercase font-semibold text-slate-400">ราคา</p>
+                <p class="text-base sm:text-lg font-bold text-slate-900">
+                    ฿{{ product.price|floatformat:2 }}
+                </p>
+            </div>
+
+            <div class="text-right">
+                <p class="text-[10px] uppercase font-semibold text-slate-400">สต็อกรวม</p>
+                {% with total=product.total_stock %}
+                    {% if total > 0 %}
+                        <p class="text-xs sm:text-sm font-semibold text-emerald-600 flex items-center gap-1 justify-end">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                            {{ total }} ชิ้น
+                        </p>
+                    {% else %}
+                        <p class="text-xs sm:text-sm font-semibold text-rose-500">
+                            สินค้าหมด
+                        </p>
+                    {% endif %}
+                {% endwith %}
+            </div>
+        </div>
+
+        <!-- Action Button -->
+        <div class="mt-3">
+            <a href="{% url 'shop:product_detail' product.id %}" class="w-full py-2 px-3 rounded-xl text-xs sm:text-sm font-semibold text-center flex items-center justify-center gap-1.5 transition
+                {% if product.reservable and product.total_stock > 0 %}
+                    bg-gradient-to-r from-orange-600 to-kmutnb text-white hover:brightness-105 shadow-xs shadow-orange-500/20
+                {% else %}
+                    bg-slate-100 text-slate-700 hover:bg-slate-200
+                {% endif %}">
+                {% if product.reservable and product.total_stock > 0 %}
+                    <i data-lucide="ticket" class="w-4 h-4"></i>
+                    <span>จองทันที</span>
+                {% else %}
+                    <i data-lucide="info" class="w-4 h-4"></i>
+                    <span>ดูรายละเอียด</span>
+                {% endif %}
+            </a>
+        </div>
+    </div>
+</div>

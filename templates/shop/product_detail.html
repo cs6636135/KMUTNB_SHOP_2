@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ product.name }} | KMUTNB Shop{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center gap-2 text-xs text-slate-500 mb-6">
+        <a href="{% url 'shop:home' %}" class="hover:text-kmutnb">หน้าแรก</a>
+        <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400"></i>
+        <a href="{% url 'shop:product_list' %}" class="hover:text-kmutnb">สินค้าทั้งหมด</a>
+        <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400"></i>
+        <span class="text-slate-800 font-medium truncate max-w-xs">{{ product.name }}</span>
+    </nav>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <!-- Left: Product Image -->
+        <div class="lg:col-span-5">
+            <div class="bg-white rounded-3xl border border-slate-200/90 overflow-hidden shadow-sm aspect-square relative">
+                {% if product.image_url %}
+                    <img src="{{ product.image_url }}" alt="{{ product.name }}" class="w-full h-full object-cover">
+                {% else %}
+                    <div class="w-full h-full flex flex-col items-center justify-center text-slate-300 bg-slate-50">
+                        <i data-lucide="package" class="w-20 h-20 stroke-1 mb-2"></i>
+                        <span class="text-xs">ไม่มีรูปภาพประกอบ</span>
+                    </div>
+                {% endif %}
+
+                <div class="absolute top-4 left-4">
+                    {% if product.reservable %}
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-600 text-white shadow-md">
+                            <i data-lucide="check" class="w-4 h-4"></i>
+                            รองรับการจองออนไลน์
+                        </span>
+                    {% else %}
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-white shadow-md">
+                            <i data-lucide="store" class="w-4 h-4"></i>
+                            จำหน่ายเฉพาะหน้าร้าน
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Middle & Right: Product Details & Stock Table & Booking Form -->
+        <div class="lg:col-span-7 space-y-6">
+            <!-- Product Header -->
+            <div class="bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-8 shadow-xs">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-orange-50 text-orange-700 border border-orange-200">
+                        {{ product.category.name }}
+                    </span>
+                    <span class="text-xs text-slate-400">รหัสสินค้า: #KMU-P{{ product.id|stringformat:"04d" }}</span>
+                </div>
+
+                <h1 class="text-xl sm:text-3xl font-extrabold text-slate-900 leading-snug">
+                    {{ product.name }}
+                </h1>
+
+                <div class="mt-4 flex items-baseline gap-3">
+                    <span class="text-3xl sm:text-4xl font-extrabold text-kmutnb">
+                        ฿{{ product.price|floatformat:2 }}
+                    </span>
+                    <span class="text-xs text-slate-500">ราคารวมภาษีมูลค่าเพิ่มแล้ว</span>
+                </div>
+
+                <div class="mt-6 pt-6 border-t border-slate-100">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">รายละเอียดสินค้า</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed whitespace-pre-line">
+                        {{ product.description|default:"ไม่มีคำอธิบายเพิ่มเติมสำหรับสินค้านี้" }}
+                    </p>
+                </div>
+            </div>
+
+            <!-- Multi-location Stock Breakdown (FR05, FR06) -->
+            <div class="bg-white rounded-3xl border border-slate-200/90 p-6 shadow-xs">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-base flex items-center gap-2">
+                            <i data-lucide="map-pin" class="w-5 h-5 text-orange-600"></i>
+                            สต็อกสินค้าแยกตามสถานที่จำหน่าย (จุดรับสินค้า)
+                        </h3>
+                        <p class="text-xs text-slate-500 mt-0.5">ตรวจสอบจำนวนคงเหลือของแต่ละสาขาในมหาวิทยาลัย</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-[10px] text-slate-400 uppercase font-semibold block">คงเหลือรวมทุกสาขา</span>
+                        <span class="text-sm font-bold text-slate-900">{{ product.total_stock }} ชิ้น</span>
+                    </div>
+                </div>
+
+                <div class="overflow-hidden rounded-2xl border border-slate-200 text-sm">
+                    <table class="w-full text-left">
+                        <thead class="bg-slate-50 text-slate-500 text-xs font-semibold uppercase border-b border-slate-200">
+                            <tr>
+                                <th class="p-3 sm:p-4">จุดจำหน่าย / อาคาร</th>
+                                <th class="p-3 sm:p-4">ตำแหน่ง</th>
+                                <th class="p-3 sm:p-4 text-right">จำนวนคงเหลือ</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            {% for stock in stocks %}
+                                <tr class="hover:bg-orange-50/40 transition">
+                                    <td class="p-3 sm:p-4">
+                                        <div class="font-semibold text-slate-800">{{ stock.location.name }}</div>
+                                    </td>
+                                    <td class="p-3 sm:p-4 text-xs text-slate-500">
+                                        {{ stock.location.location_detail }}
+                                    </td>
+                                    <td class="p-3 sm:p-4 text-right">
+                                        {% if stock.stock > 5 %}
+                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                                พร้อมจำหน่าย ({{ stock.stock }} ชิ้น)
+                                            </span>
+                                        {% elif stock.stock > 0 %}
+                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                                ใกล้หมด ({{ stock.stock }} ชิ้น)
+                                            </span>
+                                        {% else %}
+                                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-50 text-rose-700">
+                                                สินค้าหมด (0 ชิ้น)
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="3" class="p-6 text-center text-slate-400 text-xs">
+                                        ยังไม่ได้กระจายสินค้าไปยังสาขา
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Reservation Form Section (FR08, FR09, FR10, FR11) -->
+            {% if product.reservable and product.total_stock > 0 %}
+                <div class="bg-gradient-to-br from-orange-50/90 to-amber-50/50 rounded-3xl border-2 border-orange-200 p-6 sm:p-8 shadow-sm">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-orange-600 text-white flex items-center justify-center font-bold shadow-md shadow-orange-500/20">
+                            <i data-lucide="ticket" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-base sm:text-lg font-bold text-slate-900">จองสินค้านี้ล่วงหน้า (ล็อกสต็อก 4 ชม.)</h2>
+                            <p class="text-xs text-slate-600">ไม่ต้องชำระเงินตอนนี้ ชำระเงินสดหรือสแกนจ่ายที่จุดจำหน่ายเมื่อรับสินค้า</p>
+                        </div>
+                    </div>
+
+                    <form action="{% url 'reservations:reserve_action' %}" method="POST" class="space-y-4">
+                        {% csrf_token %}
+                        <input type="hidden" name="product_id" value="{{ product.id }}">
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <!-- Student ID / Phone -->
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                                    รหัสนักศึกษา หรือ เบอร์โทรศัพท์ <span class="text-rose-500">*</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    name="student_id"
+                                    required
+                                    placeholder="เช่น 660406263... หรือ 0812345678"
+                                    class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm text-slate-800 shadow-xs"
+                                >
+                            </div>
+
+                            <!-- Pickup Location Selection -->
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                                    เลือกจุดรับสินค้า <span class="text-rose-500">*</span>
+                                </label>
+                                <select
+                                    name="location_id"
+                                    required
+                                    class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm text-slate-800 shadow-xs"
+                                >
+                                    {% for stock in stocks %}
+                                        {% if stock.stock > 0 %}
+                                            <option value="{{ stock.location.id }}">
+                                                {{ stock.location.name }} (คงเหลือ {{ stock.stock }} ชิ้น)
+                                            </option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Quantity and Submit Button -->
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end pt-2">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                                    จำนวนที่ต้องการจอง
+                                </label>
+                                <input
+                                    type="number"
+                                    name="quantity"
+                                    min="1"
+                                    max="5"
+                                    value="1"
+                                    required
+                                    class="w-full px-4 py-3 rounded-xl border border-slate-300 bg-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm text-slate-800 font-semibold"
+                                >
+                            </div>
+
+                            <div class="sm:col-span-2">
+                                <button
+                                    type="submit"
+                                    class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-orange-600 to-kmutnb hover:brightness-105 active:scale-[0.99] text-white font-bold text-sm shadow-md shadow-orange-500/25 flex items-center justify-center gap-2 transition"
+                                >
+                                    <i data-lucide="check-circle-2" class="w-5 h-5"></i>
+                                    <span>ยืนยันการจองสินค้า</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-2 text-[11px] text-slate-500 pt-1">
+                            <i data-lucide="info" class="w-3.5 h-3.5 text-orange-500 shrink-0"></i>
+                            <span>ระบบจะสร้างรหัสการจองให้ทันที และท่านจะมีเวลา 4 ชั่วโมงในการเดินทางไปรับสินค้า</span>
+                        </div>
+                    </form>
+                </div>
+            {% else %}
+                <div class="bg-slate-100 rounded-3xl p-6 text-center text-slate-500 text-sm">
+                    <i data-lucide="alert-circle" class="w-6 h-6 mx-auto mb-2 text-slate-400"></i>
+                    {% if not product.reservable %}
+                        สินค้านี้ไม่เปิดให้จองล่วงหน้า สามารถเลือกซื้อได้ที่จุดจำหน่ายโดยตรง
+                    {% else %}
+                        สินค้าหมดสต็อกชั่วคราวในทุกสาขา ขออภัยในความไม่สะดวก
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends 'base_manage.html' %}
+
+{% block page_title %}เพิ่มหรือจัดสรรสินค้าเข้าสต็อกสาขา{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto space-y-6">
+    <div class="flex items-center justify-between">
+        <h2 class="text-xl font-extrabold text-slate-900">เพิ่ม / จัดสรรสินค้าเข้าสต็อก</h2>
+        <a href="{% url 'shop_manage:stock_list' %}" class="text-xs font-semibold text-slate-500 hover:text-slate-800 flex items-center gap-1">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i> กลับ
+        </a>
+    </div>
+
+    <div class="bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-8 shadow-xs">
+        <form method="POST" action="{% url 'shop_manage:stock_create' %}" class="space-y-4">
+            {% csrf_token %}
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                    เลือกสินค้า <span class="text-rose-500">*</span>
+                </label>
+                <select name="product" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm text-slate-800 bg-white">
+                    <option value="">-- กรุณาเลือกสินค้า --</option>
+                    {% for p in products %}
+                        <option value="{{ p.id }}">{{ p.name }} (฿{{ p.price|floatformat:2 }}) [{{ p.category.name }}]</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                    จุดจำหน่าย / สาขา <span class="text-rose-500">*</span>
+                </label>
+                {% if is_admin %}
+                    <select name="location" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm text-slate-800 bg-white">
+                        <option value="">-- เลือกจุดจำหน่าย --</option>
+                        {% for loc in locations %}
+                            <option value="{{ loc.id }}">{{ loc.name }} ({{ loc.location_detail }})</option>
+                        {% endfor %}
+                    </select>
+                {% else %}
+                    <input type="hidden" name="location" value="{{ user_location.id }}">
+                    <div class="px-4 py-2.5 rounded-xl bg-slate-100 border border-slate-200 text-sm font-semibold text-slate-700 flex items-center justify-between">
+                        <span>{{ user_location.name }}</span>
+                        <span class="text-xs text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded">สาขาของคุณ (FR32)</span>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                    จำนวนสต็อก (ชิ้น) <span class="text-rose-500">*</span>
+                </label>
+                <input
+                    type="number"
+                    name="stock"
+                    min="0"
+                    value="10"
+                    required
+                    class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm text-slate-800 font-bold"
+                >
+            </div>
+
+            <div class="pt-4 flex items-center justify-end gap-3 border-t border-slate-100">
+                <a href="{% url 'shop_manage:stock_list' %}" class="px-5 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50 transition">
+                    ยกเลิก
+                </a>
+                <button type="submit" class="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm shadow-md transition flex items-center gap-2">
+                    <i data-lucide="save" class="w-4 h-4"></i>
+                    <span>บันทึกสต็อก</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

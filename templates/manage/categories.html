@@ -1,0 +1,57 @@
+{% extends 'base_manage.html' %}
+
+{% block page_title %}จัดการหมวดหมู่สินค้า{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="flex items-center justify-between">
+        <div>
+            <h2 class="text-xl font-extrabold text-slate-900">หมวดหมู่สินค้า</h2>
+            <p class="text-xs text-slate-500">จัดการประเภทสินค้าสำหรับจัดกลุ่มและตัวกรอง</p>
+        </div>
+        <a href="{% url 'shop_manage:category_create' %}" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs sm:text-sm shadow-md transition">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            <span>เพิ่มหมวดหมู่</span>
+        </a>
+    </div>
+
+    <div class="bg-white rounded-3xl border border-slate-200/90 shadow-xs overflow-hidden">
+        <table class="w-full text-left text-xs sm:text-sm">
+            <thead class="bg-slate-50 text-slate-500 font-bold uppercase border-b border-slate-200 text-[11px]">
+                <tr>
+                    <th class="p-4">ชื่อหมวดหมู่</th>
+                    <th class="p-4">รายละเอียด</th>
+                    <th class="p-4">จำนวนสินค้าในหมวด</th>
+                    <th class="p-4 text-right">จัดการ</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+                {% for cat in categories %}
+                    <tr class="hover:bg-slate-50/70 transition">
+                        <td class="p-4 font-bold text-slate-900">{{ cat.name }}</td>
+                        <td class="p-4 text-slate-600">{{ cat.description|default:"-" }}</td>
+                        <td class="p-4 font-semibold text-slate-800">{{ cat.product_count }} รายการ</td>
+                        <td class="p-4 text-right">
+                            <div class="flex items-center justify-end gap-2">
+                                <a href="{% url 'shop_manage:category_edit' cat.id %}" class="p-2 text-slate-600 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition" title="แก้ไข">
+                                    <i data-lucide="pencil" class="w-4 h-4"></i>
+                                </a>
+                                <form method="POST" action="{% url 'shop_manage:category_delete' cat.id %}" onsubmit="return confirm('ต้องการลบหมวดหมู่นี้หรือไม่?');" class="inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition" title="ลบ">
+                                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4" class="p-8 text-center text-slate-400">ยังไม่มีหมวดหมู่สินค้า</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

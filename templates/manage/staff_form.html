@@ -1,0 +1,91 @@
+{% extends 'base_manage.html' %}
+
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto space-y-6">
+    <div class="flex items-center justify-between">
+        <h2 class="text-xl font-extrabold text-slate-900">{{ title }}</h2>
+        <a href="{% url 'accounts:staff_list' %}" class="text-xs font-semibold text-slate-500 hover:text-slate-800 flex items-center gap-1">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i> กลับ
+        </a>
+    </div>
+
+    <div class="bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-8 shadow-xs">
+        <form method="POST" class="space-y-4">
+            {% csrf_token %}
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                    ชื่อผู้ใช้งาน (Username) <span class="text-rose-500">*</span>
+                </label>
+                {{ form.username }}
+                {% if form.username.errors %}<p class="text-rose-500 text-xs mt-1">{{ form.username.errors.0 }}</p>{% endif %}
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                        ชื่อจริง (First Name)
+                    </label>
+                    {{ form.first_name }}
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                        นามสกุล (Last Name)
+                    </label>
+                    {{ form.last_name }}
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                    อีเมล (Email)
+                </label>
+                {{ form.email }}
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                        ระดับสิทธิ์ (Role) <span class="text-rose-500">*</span>
+                    </label>
+                    {{ form.role }}
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                        กำหนดจุดจำหน่ายที่รับผิดชอบ (Location)
+                    </label>
+                    {{ form.location }}
+                    <p class="text-[11px] text-slate-400 mt-1">หากเป็น Admin ให้เว้นว่างไว้ (ดูแลทุกสาขา)</p>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                    รหัสผ่าน (Password) {% if not is_edit %}<span class="text-rose-500">*</span>{% endif %}
+                </label>
+                {{ form.password }}
+                <p class="text-[11px] text-slate-400 mt-1">{{ form.password.help_text }}</p>
+            </div>
+
+            <div class="pt-2">
+                <label class="flex items-center gap-2 text-xs font-semibold text-slate-700">
+                    {{ form.is_active }}
+                    <span>เปิดใช้งานบัญชีนี้ (Active)</span>
+                </label>
+            </div>
+
+            <div class="pt-4 flex items-center justify-end gap-3 border-t border-slate-100">
+                <a href="{% url 'accounts:staff_list' %}" class="px-5 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50 transition">
+                    ยกเลิก
+                </a>
+                <button type="submit" class="px-6 py-2.5 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-bold text-xs sm:text-sm shadow-md transition flex items-center gap-2">
+                    <i data-lucide="save" class="w-4 h-4"></i>
+                    <span>บันทึกบัญชีผู้ใช้</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
